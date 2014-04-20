@@ -418,6 +418,16 @@
               <FileType>1</FileType>
               <FilePath>..\User\Business.c</FilePath>
             </File>
+            <File>
+              <FileName>tft.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\tft.c</FilePath>
+            </File>
+            <File>
+              <FileName>HumiTemp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\HumiTemp.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
