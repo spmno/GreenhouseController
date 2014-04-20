@@ -30,7 +30,7 @@ typedef struct tagBusinessQueueItem_t
 } BusinessQueueItem_t;
 
 
-void BusinessLogic_Entry( void *pvParameters );
+void Business_Entry( void *pvParameters );
 
 
 #endif	/* __BusinessLogic_h__ */
