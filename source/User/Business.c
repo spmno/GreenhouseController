@@ -37,10 +37,10 @@ typedef enum tagEmCurAdjustItem
 
 static   EmCurAdjustItem  m_CurAdjustItem = Em_Item_Invilid; 
 
-static  u8 m_uiCurLeastTemp = defaultLestTemp;
-static  u8  m_uiCurMostTemp = defaultMostTemp;
-static  u8  m_uiElectricMachineTime = defaultElectricMachineTime;
-static  u8  m_uiElectricLine = defaultElectricLine;
+static  int m_uiCurLeastTemp = defaultLestTemp;
+static  int  m_uiCurMostTemp = defaultMostTemp;
+static  int  m_uiElectricMachineTime = defaultElectricMachineTime;
+static  int  m_uiElectricLine = defaultElectricLine;
 
 
 
@@ -55,7 +55,7 @@ void RefurbishRegularScreen(void)
 		TFT_DrawString(148,230,"当前时间",forecolor,backcolor,TftFontSize_16x16);
 }
 
-void RefurbishElectricTime(u8 iTime)
+void RefurbishElectricTime(int iTime)
 {
 		unsigned char str[3];
 	
@@ -79,7 +79,7 @@ void RefurbishElectricTime(u8 iTime)
 
 }
 
-void RefurbishCurTemp(u8 iCurTemp)
+void RefurbishCurTemp(int iCurTemp)
 {
 		unsigned char str[2];
 		if(iCurTemp>=10)
@@ -97,7 +97,7 @@ void RefurbishCurTemp(u8 iCurTemp)
 
 }
 
-void RefurbishMostHightTemp(u8 iHTemp)
+void RefurbishMostHightTemp(int iHTemp)
 {
 
 		unsigned char str[2];
@@ -123,7 +123,7 @@ void RefurbishMostHightTemp(u8 iHTemp)
 		
 
 }
-void RefurbishMostLowTemp(u8 iLTemp)
+void RefurbishMostLowTemp(int iLTemp)
 {
 		unsigned char str[2];
 		if(iLTemp>=10)
@@ -148,7 +148,7 @@ void RefurbishMostLowTemp(u8 iLTemp)
 
 }
 
-void RefurbishLine(u8 iline)
+void RefurbishLine(int iline)
 {
 		unsigned char str[2];
 
