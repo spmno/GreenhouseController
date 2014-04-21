@@ -14,6 +14,36 @@
 ------------------------------------------------*/
 #define   forecolor  0x0000
 #define   backcolor  0xffff
+#define		Redcolor	 0xf800
+
+#define  defaultLestTemp  (18)
+#define  defaultMostTemp	(25)	
+#define  defaultLestLimitTemp  (0)
+#define  defaultMostLimitTemp	(40)	
+#define  defaultElectricMachineTime (120)
+#define  defaultElectricMachineMostTime (600)
+#define  defaultElectricMachineLesastTime (120)
+#define  ElectricMachineTimeStep (30)
+#define  defaultElectricLine	(1)
+
+typedef enum tagEmCurAdjustItem
+{
+	Em_Item_LeastTemp = 1,
+	Em_Item_MostTemp = 2,
+	Em_Item_Count = Em_Item_MostTemp,
+	Em_Item_Invilid,
+
+} EmCurAdjustItem;
+
+static   EmCurAdjustItem  m_CurAdjustItem = Em_Item_Invilid; 
+
+static  u8 m_uiCurLeastTemp = defaultLestTemp;
+static  u8  m_uiCurMostTemp = defaultMostTemp;
+static  u8  m_uiElectricMachineTime = defaultElectricMachineTime;
+static  u8  m_uiElectricLine = defaultElectricLine;
+
+
+
 
 void RefurbishRegularScreen(void)
 {
@@ -25,7 +55,7 @@ void RefurbishRegularScreen(void)
 		TFT_DrawString(148,230,"当前时间",forecolor,backcolor,TftFontSize_16x16);
 }
 
-void RefurbishElectricTime(unsigned int iTime)
+void RefurbishElectricTime(u8 iTime)
 {
 		unsigned char str[3];
 	
@@ -49,7 +79,7 @@ void RefurbishElectricTime(unsigned int iTime)
 
 }
 
-void RefurbishCurTemp(unsigned int iCurTemp)
+void RefurbishCurTemp(u8 iCurTemp)
 {
 		unsigned char str[2];
 		if(iCurTemp>=10)
@@ -67,8 +97,9 @@ void RefurbishCurTemp(unsigned int iCurTemp)
 
 }
 
-void RefurbishMostHightTemp(unsigned int iHTemp)
+void RefurbishMostHightTemp(u8 iHTemp)
 {
+
 		unsigned char str[2];
 		if(iHTemp>=10)
 		{
@@ -81,10 +112,18 @@ void RefurbishMostHightTemp(unsigned int iHTemp)
 		}
 
 		
-		TFT_DrawString(28,200,str,forecolor,backcolor,TftFontSize_16x16);
+			if(m_CurAdjustItem == Em_Item_MostTemp)
+		{
+			TFT_DrawString(28,200,str,Redcolor,backcolor,TftFontSize_16x16);
+		}
+		else
+		{
+			TFT_DrawString(28,200,str,forecolor,backcolor,TftFontSize_16x16);
+		}
+		
 
 }
-void RefurbishMostLowTemp(unsigned int iLTemp)
+void RefurbishMostLowTemp(u8 iLTemp)
 {
 		unsigned char str[2];
 		if(iLTemp>=10)
@@ -97,34 +136,19 @@ void RefurbishMostLowTemp(unsigned int iLTemp)
 				str[0]  =  iLTemp+48;
 		}
 
-		
-		TFT_DrawString(148,200,str,forecolor,backcolor,TftFontSize_16x16);
-
-}
-void RefurbishElectricCurTime(unsigned int iCurTime)
-{
+		if(m_CurAdjustItem == Em_Item_LeastTemp)
+		{
+			TFT_DrawString(148,200,str,Redcolor,backcolor,TftFontSize_16x16);
+		}
+		else
+		{
+			TFT_DrawString(148,200,str,forecolor,backcolor,TftFontSize_16x16);
+		}
 	
-		unsigned char str[3];
-		if(iCurTime >= 100)
-		{
-			str[0]  =  iCurTime/100+48;
-			str[1]  =  (iCurTime/10)%10+48;
-			str[2]  =  iCurTime%10+48;
-		}
-		else if(iCurTime>=10 && iCurTime<100)
-		{
-				str[0]  =  iCurTime/10+48;
-				str[1]  =  iCurTime%10+48;
-		}
-		else if(iCurTime<10)
-		{
-				str[0]  =  iCurTime+48;
-		}
-		
-		TFT_DrawString(148,260,str,forecolor,backcolor,TftFontSize_16x16);
 
 }
-void RefurbishLine(unsigned int iline)
+
+void RefurbishLine(u8 iline)
 {
 		unsigned char str[2];
 
@@ -132,6 +156,93 @@ void RefurbishLine(unsigned int iline)
 		
 		TFT_DrawString(28,260,str,forecolor,backcolor,TftFontSize_16x16);
 
+}
+void   dealBtnAdd ()
+{
+	if (m_CurAdjustItem == Em_Item_LeastTemp)
+	{
+		if(m_uiCurLeastTemp >= m_uiCurMostTemp)
+		{
+			return;
+		}
+			m_uiCurLeastTemp++;
+		RefurbishMostLowTemp(m_uiCurLeastTemp);
+	}
+	else if (m_CurAdjustItem == Em_Item_MostTemp)
+	{
+		if(m_uiCurMostTemp >= defaultMostLimitTemp)
+		{
+			return;
+		}
+			m_uiCurMostTemp++;
+		RefurbishMostHightTemp(m_uiCurMostTemp);
+	}
+}
+
+void   dealBtnReduce ()
+{
+	if (m_CurAdjustItem == Em_Item_LeastTemp)
+	{
+		if(m_uiCurLeastTemp <= defaultLestLimitTemp)
+		{
+			return;
+		}
+		m_uiCurLeastTemp--;
+		RefurbishMostLowTemp(m_uiCurLeastTemp);
+	}
+	else if (m_CurAdjustItem == Em_Item_MostTemp)
+	{
+		if(m_uiCurMostTemp <= m_uiCurLeastTemp)
+		{
+			return;
+		}
+		m_uiCurMostTemp--;
+		RefurbishMostHightTemp(m_uiCurMostTemp);
+	}
+}
+
+void dealBtnElectricMachineTime ()
+{
+	m_uiElectricMachineTime +=ElectricMachineTimeStep;
+	if (m_uiElectricMachineTime > defaultElectricMachineMostTime)
+	{
+		m_uiElectricMachineTime = defaultElectricMachineLesastTime;
+	}	
+	RefurbishElectricTime(m_uiElectricMachineTime);
+}
+
+void dealBtnSwitchLine()
+{
+	if (m_uiElectricLine == 1)
+	{
+		m_uiElectricLine = 2;
+	}
+	else if (m_uiElectricLine == 2)
+	{
+		m_uiElectricLine = 1;
+	}
+	RefurbishLine(m_uiElectricLine);
+}
+
+void dealBtnAjustTempUpperLimit()
+{
+	m_CurAdjustItem = Em_Item_MostTemp;
+	RefurbishMostHightTemp(m_uiCurMostTemp);
+	RefurbishMostLowTemp(m_uiCurLeastTemp);
+}
+
+void dealBtnAjustTempLowerLimit()
+{
+	m_CurAdjustItem = Em_Item_LeastTemp;
+	RefurbishMostHightTemp(m_uiCurMostTemp);
+	RefurbishMostLowTemp(m_uiCurLeastTemp);
+}
+
+void RefurbishTempBackColor()
+{
+	m_CurAdjustItem = Em_Item_Invilid;
+	RefurbishMostHightTemp(m_uiCurMostTemp);
+	RefurbishMostLowTemp(m_uiCurLeastTemp);
 }
 
 void Business_Entry( void *pvParameters )
@@ -145,11 +256,14 @@ void Business_Entry( void *pvParameters )
 	BusinessQueueItem_t*	pstBusinessQueueItem = NULL;
 
 	
-
+		RefurbishRegularScreen();
+		RefurbishElectricTime(m_uiElectricMachineTime);
+		RefurbishMostHightTemp(m_uiCurMostTemp);
+		RefurbishMostLowTemp(m_uiCurLeastTemp);
+		RefurbishLine(m_uiElectricLine);
 
 	while( 1 )
 	{
-		RefurbishRegularScreen();
 		xStatus = xQueueReceive( hQueue, &pstBusinessQueueItem, portMAX_DELAY );
 		
 		if( xStatus == pdPASS )
@@ -162,6 +276,48 @@ void Business_Entry( void *pvParameters )
 			else if(pstBusinessQueueItem->enItemType == BusinessQuueueItemType_Key)
 			{
 					/*----按键处理----*/
+					switch(pstBusinessQueueItem->u.enKey)
+					{
+						case KeyType_1:
+							dealBtnElectricMachineTime();
+							RefurbishTempBackColor();
+						break;
+						
+						case KeyType_2:
+							dealBtnAjustTempUpperLimit();
+						break;
+						
+						case KeyType_3:
+							dealBtnAjustTempLowerLimit();
+						break;
+						
+						case KeyType_4:
+							/*----关机键---*/
+							RefurbishTempBackColor();
+						break;
+						
+						case KeyType_5:
+							dealBtnSwitchLine();
+							RefurbishTempBackColor();
+						break;
+						
+						case KeyType_6:
+							/*----调整时间---*/
+							RefurbishTempBackColor();
+						break;
+						
+						case KeyType_7:
+							dealBtnAdd();
+						break;
+						
+						case KeyType_8:
+							dealBtnReduce();
+						break;
+						
+						default:
+							
+						break;
+					}
 			}
 		}	
 
