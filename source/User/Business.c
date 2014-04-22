@@ -100,7 +100,7 @@ void RefurbishCurTemp(int iCurTemp)
 void RefurbishMostHightTemp(int iHTemp)
 {
 
-		unsigned char str[2];
+		unsigned char str[3];
 		if(iHTemp>=10)
 		{
 				str[0]  =  iHTemp/10+48;
@@ -109,9 +109,10 @@ void RefurbishMostHightTemp(int iHTemp)
 		else
 		{
 				str[0]  =  iHTemp+48;
+				str[1]  =  ' ';
 		}
 
-		
+		str[2]  =  ' ';
 			if(m_CurAdjustItem == Em_Item_MostTemp)
 		{
 			TFT_DrawString(28,200,str,Redcolor,backcolor,TftFontSize_16x16);
@@ -125,7 +126,7 @@ void RefurbishMostHightTemp(int iHTemp)
 }
 void RefurbishMostLowTemp(int iLTemp)
 {
-		unsigned char str[2];
+		unsigned char str[3];
 		if(iLTemp>=10)
 		{
 				str[0]  =  iLTemp/10+48;
@@ -134,8 +135,10 @@ void RefurbishMostLowTemp(int iLTemp)
 		else
 		{
 				str[0]  =  iLTemp+48;
+				str[1]  =  ' ';
 		}
-
+		
+		str[2]  =  ' ';
 		if(m_CurAdjustItem == Em_Item_LeastTemp)
 		{
 			TFT_DrawString(148,200,str,Redcolor,backcolor,TftFontSize_16x16);
@@ -150,9 +153,11 @@ void RefurbishMostLowTemp(int iLTemp)
 
 void RefurbishLine(int iline)
 {
-		unsigned char str[2];
+		unsigned char str[3];
 
 		str[0] = iline+48;
+		str[1]  =  ' ';
+		str[2]  =  ' ';
 		
 		TFT_DrawString(28,260,str,forecolor,backcolor,TftFontSize_16x16);
 
