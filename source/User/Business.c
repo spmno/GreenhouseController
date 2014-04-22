@@ -25,6 +25,7 @@
 #define  defaultElectricMachineLesastTime (120)
 #define  ElectricMachineTimeStep (30)
 #define  defaultElectricLine	(1)
+#define	 MaxConut	(120)
 
 typedef enum tagEmCurAdjustItem
 {
@@ -41,7 +42,7 @@ static  int m_uiCurLeastTemp = defaultLestTemp;
 static  int  m_uiCurMostTemp = defaultMostTemp;
 static  int  m_uiElectricMachineTime = defaultElectricMachineTime;
 static  int  m_uiElectricLine = defaultElectricLine;
-
+static  int  m_uiCurTempConut = 0;
 
 
 
@@ -250,6 +251,19 @@ void RefurbishTempBackColor()
 	RefurbishMostLowTemp(m_uiCurLeastTemp);
 }
 
+void ControlElectricMachine(int CurTemp)
+{
+
+	if(CurTemp > m_uiCurMostTemp)
+	{
+			/*----控制电机----*/
+	}
+	else if(CurTemp < m_uiCurLeastTemp)
+	{
+		/*----控制电机----*/
+	}
+}
+
 void Business_Entry( void *pvParameters )
 {
 
@@ -277,6 +291,15 @@ void Business_Entry( void *pvParameters )
 			{
 				RefurbishCurTemp(pstBusinessQueueItem->u.stHumiTemp.u8Temp);
 				/*----还可以在这里刷新湿度----*/
+				if(m_uiCurTempConut == 0)
+				{
+					ControlElectricMachine(pstBusinessQueueItem->u.stHumiTemp.u8Temp);
+				}
+				m_uiCurTempConut ++;
+				if(m_uiCurTempConut >= MaxConut)
+				{
+					m_uiCurTempConut = 0;
+				}
 			}
 			else if(pstBusinessQueueItem->enItemType == BusinessQuueueItemType_Key)
 			{
