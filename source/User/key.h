@@ -18,9 +18,6 @@ typedef enum tagKeyTypeEnum
 
 } KeyTypeEnum;
 
-
-
-void Key_Init( void );
-KeyTypeEnum Key_Scan( void );
+void Key_Entry( void *pvParameters );
 
 #endif	/* __KEY_H__ */

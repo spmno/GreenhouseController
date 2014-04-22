@@ -357,7 +357,7 @@
               <MiscControls></MiscControls>
               <Define>USE_STDPERIPH_DRIVER,STM32F10X_MD</Define>
               <Undefine></Undefine>
-              <IncludePath>..\CMSIS;..\Lib\inc;..\Lib\src;..\Startup;..\User;..\FreeRTOS\inc</IncludePath>
+              <IncludePath>..\CMSIS;..\Lib\inc;..\Lib\src;..\Startup;..\User;..\FreeRTOS\inc;..\Driver</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -427,6 +427,11 @@
               <FileName>HumiTemp.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\User\HumiTemp.c</FilePath>
+            </File>
+            <File>
+              <FileName>key.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\key.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -617,6 +622,16 @@
               <FileName>timers.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\FreeRTOS\src\timers.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Driver</GroupName>
+          <Files>
+            <File>
+              <FileName>DHT11.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Driver\DHT11.c</FilePath>
             </File>
           </Files>
         </Group>

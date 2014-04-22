@@ -4,13 +4,6 @@
 #ifndef	__HumiTemp_H__
 #define	__HumiTemp_H__
 
-typedef enum tagHumiTempRsltEnum
-{
-	HumiTempRslt_Success = 0,
-	HumiTempRslt_Failure,
-
-} HumiTempRsltEnum;
-
 typedef struct tagHumiTempInfo_t
 {
 	u8	u8Humi;
@@ -18,9 +11,7 @@ typedef struct tagHumiTempInfo_t
 
 } HumiTempInfo_t;
 
-
-HumiTempRsltEnum HT_GetHumiTemp( HumiTempInfo_t* pstHumiTempInfo );
-
+void HumiTemp_Entry( void *pvParameters );
 
 #endif	/* __HumiTemp_H__ */
 
