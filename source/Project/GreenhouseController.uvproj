@@ -433,6 +433,11 @@
               <FileType>1</FileType>
               <FilePath>..\User\key.c</FilePath>
             </File>
+            <File>
+              <FileName>Motor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Motor.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
