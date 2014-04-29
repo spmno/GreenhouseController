@@ -399,11 +399,6 @@
           <GroupName>User</GroupName>
           <Files>
             <File>
-              <FileName>main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\User\main.c</FilePath>
-            </File>
-            <File>
               <FileName>stm32f10x_it.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\User\stm32f10x_it.c</FilePath>
@@ -437,6 +432,11 @@
               <FileName>Motor.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\User\Motor.c</FilePath>
+            </File>
+            <File>
+              <FileName>main_timer_example.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\main_timer_example.c</FilePath>
             </File>
           </Files>
         </Group>

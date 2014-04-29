@@ -22,8 +22,6 @@ int main( void )
 	TFT_Initialize();
 	Motor_GPIO_Init();
 	
-	
-	
 	xQueue = xQueueCreate( 10, sizeof( long ) );
 	if( xQueue != NULL )
 	{

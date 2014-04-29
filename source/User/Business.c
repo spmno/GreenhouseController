@@ -8,6 +8,7 @@
 
 #include	"Business.h"
 #include	"tft.h"
+#include "Motor.h"
 
 /*------------------------------------------------
              		宏值定义
@@ -17,7 +18,7 @@
 #define		Redcolor	 0xf800
 
 #define  defaultLestTemp  (18)
-#define  defaultMostTemp	(25)	
+#define  defaultMostTemp	(30)	
 #define  defaultLestLimitTemp  (0)
 #define  defaultMostLimitTemp	(40)	
 #define  defaultElectricMachineTime (120)
@@ -257,10 +258,14 @@ void ControlElectricMachine(int CurTemp)
 	if(CurTemp > m_uiCurMostTemp)
 	{
 			/*----控制电机----*/
+			SetRelay();
 	}
 	else if(CurTemp < m_uiCurLeastTemp)
 	{
 		/*----控制电机----*/
+	} 
+	else {
+		ReSetRelay();
 	}
 }
 

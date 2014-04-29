@@ -39,7 +39,7 @@ void HumiTemp_Entry( void *pvParameters )
 			}
 		}
 	
-		vTaskDelayUntil( &xLastWakeTime, ( 5000 / portTICK_RATE_MS ) );
+		vTaskDelayUntil( &xLastWakeTime, ( 1000 / portTICK_RATE_MS ) );
 	}
 
 	return	;

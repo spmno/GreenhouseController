@@ -46,29 +46,35 @@ void RCC_DeInit(void)
 ------------------------------------------------------------*/	
 void Stm32_Clock_Init(void)
 {
-	unsigned char temp=0;
-	u8 timeout=0;
+	ErrorStatus HSEStartUpStatus; 
+
 	RCC_DeInit();
-	RCC->CR|=0x00010000;  //外部高速时钟使能HSEON
 
-	timeout=0;
-	while(!(RCC->CR>>17)&&timeout<200)timeout++;//等待外部时钟就绪	 
+	RCC_HSEConfig(RCC_HSE_ON);
 
-	//0-24M 等待0;24-48M 等待1;48-72M等待2;(非常重要!)	   
-	FLASH->ACR|=0x32;//FLASH 2个延时周期
+	HSEStartUpStatus = RCC_WaitForHSEStartUp();
+	
+	if (HSEStartUpStatus == SUCCESS) {
 
-	RCC->CFGR|=0X001D2400;//APB1/2=DIV2;AHB=DIV1;PLL=9*CLK;HSE作为PLL时钟源
-	RCC->CR|=0x01000000;  //PLLON
+		RCC_HCLKConfig(RCC_SYSCLK_Div1);
 
-	timeout=0;
-	while(!(RCC->CR>>25)&&timeout<200)timeout++;//等待PLL锁定
+		RCC_PCLK2Config(RCC_HCLK_Div1);
 
-	RCC->CFGR|=0x00000002;//PLL作为系统时钟
-	while(temp!=0x02&&timeout<200)     //等待PLL作为系统时钟设置成功
-	{   
-		temp=RCC->CFGR>>2;
-		timeout++;
-		temp&=0x03;
-	}  
+		RCC_PCLK1Config(RCC_HCLK_Div2);
+
+		FLASH_SetLatency(FLASH_Latency_2);
+
+		FLASH_PrefetchBufferCmd(FLASH_PrefetchBuffer_Enable);
+
+		RCC_PLLConfig(RCC_PLLSource_HSE_Div1, RCC_PLLMul_9);
+
+		RCC_PLLCmd(ENABLE);
+
+		while(RCC_GetFlagStatus(RCC_FLAG_PLLRDY) == RESET);
+
+		RCC_SYSCLKConfig(RCC_SYSCLKSource_PLLCLK);
+
+		while(RCC_GetSYSCLKSource() != 0x08);
+	}
 }
 
