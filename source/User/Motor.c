@@ -8,6 +8,8 @@
 #include	"portable.h"
 #include	"freertosconfig.h"
 
+#define Relay_Delay		(0xEFFFF)
+
 void Motor_GPIO_Init( void )
 {
 		GPIO_InitTypeDef GPIO_InitStructure;
@@ -24,19 +26,46 @@ void Motor_GPIO_Init( void )
 		
 	return	;
 }
-
-// 置高电平 继电器放开
-void SetRelay( void )
+void Delay(int nCount)
 {
-		GPIO_SetBits(GPIOA, GPIO_Pin_8);
-		GPIO_SetBits(GPIOB, GPIO_Pin_15);
+  for(; nCount != 0; nCount--);
 }
 
 
-// 置低电平 继电器吸合
+void SetRelay( void )
+{
+		
+}
 void ReSetRelay( void )
 {
+
+}
+
+
+// 继电器A置高电平,继电器断开
+void SetRelayA( void )
+{
+		GPIO_SetBits(GPIOA, GPIO_Pin_8);
+}
+
+
+// 继电器B置高电平，继电器断开
+void SetRelayB( void )
+{
+		GPIO_SetBits(GPIOA, GPIO_Pin_8);
+}
+
+// 继电器A置低电平，继电器吸合
+void ReSetRelayA( void )
+{
+		Delay(Relay_Delay);
 		GPIO_ResetBits(GPIOA, GPIO_Pin_8);
+}
+
+// 继电器B置低电平，继电器吸合
+void ReSetRelayB( void )
+{
+		Delay(Relay_Delay);
 		GPIO_ResetBits(GPIOB, GPIO_Pin_15);
 }
 
