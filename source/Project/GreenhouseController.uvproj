@@ -434,9 +434,9 @@
               <FilePath>..\User\Motor.c</FilePath>
             </File>
             <File>
-              <FileName>main_timer_example.c</FileName>
+              <FileName>main.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\User\main_timer_example.c</FilePath>
+              <FilePath>..\User\main.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -637,6 +637,11 @@
               <FileName>DHT11.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Driver\DHT11.c</FilePath>
+            </File>
+            <File>
+              <FileName>Timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Driver\Timer.c</FilePath>
             </File>
           </Files>
         </Group>
