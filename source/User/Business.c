@@ -258,14 +258,14 @@ void ControlElectricMachine(int CurTemp)
 	if(CurTemp > m_uiCurMostTemp)
 	{
 			/*----控制电机----*/
-			SetRelay();
+//			SetRelay();
 	}
 	else if(CurTemp < m_uiCurLeastTemp)
 	{
 		/*----控制电机----*/
 	} 
 	else {
-		ReSetRelay();
+//		ReSetRelay();
 	}
 }
 

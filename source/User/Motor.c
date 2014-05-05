@@ -31,33 +31,18 @@ void Delay(int nCount)
   for(; nCount != 0; nCount--);
 }
 
-
+// 继电器置高电平,继电器断开
 void SetRelay( void )
 {
-		
-}
-void ReSetRelay( void )
-{
-
-}
-
-
-// 继电器A置高电平,继电器断开
-void SetRelayA( void )
-{
 		GPIO_SetBits(GPIOA, GPIO_Pin_8);
+		GPIO_SetBits(GPIOB, GPIO_Pin_15);
 }
 
-
-// 继电器B置高电平，继电器断开
-void SetRelayB( void )
-{
-		GPIO_SetBits(GPIOA, GPIO_Pin_8);
-}
 
 // 继电器A置低电平，继电器吸合
 void ReSetRelayA( void )
 {
+		GPIO_SetBits(GPIOB, GPIO_Pin_15);
 		Delay(Relay_Delay);
 		GPIO_ResetBits(GPIOA, GPIO_Pin_8);
 }
@@ -65,6 +50,7 @@ void ReSetRelayA( void )
 // 继电器B置低电平，继电器吸合
 void ReSetRelayB( void )
 {
+		GPIO_SetBits(GPIOA, GPIO_Pin_8);
 		Delay(Relay_Delay);
 		GPIO_ResetBits(GPIOB, GPIO_Pin_15);
 }
