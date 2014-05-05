@@ -4,6 +4,7 @@
 
 void Motor_GPIO_Init( void );
 
+// 设置延时周期，到位为ms，如果不调用此函数，延时周期默认1S
 void Delay(int nCount);
 
 // 继电器置高电平 

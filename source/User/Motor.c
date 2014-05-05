@@ -8,7 +8,7 @@
 #include	"portable.h"
 #include	"freertosconfig.h"
 
-#define Relay_Delay		(0xEFFFF)
+portTickType m_xDelay = 1000 / portTICK_RATE_MS;
 
 void Motor_GPIO_Init( void )
 {
@@ -28,7 +28,7 @@ void Motor_GPIO_Init( void )
 }
 void Delay(int nCount)
 {
-  for(; nCount != 0; nCount--);
+	m_xDelay = nCount / portTICK_RATE_MS;
 }
 
 // 继电器置高电平,继电器断开
@@ -43,7 +43,9 @@ void SetRelay( void )
 void ReSetRelayA( void )
 {
 		GPIO_SetBits(GPIOB, GPIO_Pin_15);
-		Delay(Relay_Delay);
+		
+		vTaskDelay(m_xDelay);
+		
 		GPIO_ResetBits(GPIOA, GPIO_Pin_8);
 }
 
@@ -51,7 +53,9 @@ void ReSetRelayA( void )
 void ReSetRelayB( void )
 {
 		GPIO_SetBits(GPIOA, GPIO_Pin_8);
-		Delay(Relay_Delay);
+		
+		vTaskDelay(m_xDelay);
+		
 		GPIO_ResetBits(GPIOB, GPIO_Pin_15);
 }
 
