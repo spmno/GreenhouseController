@@ -92,17 +92,36 @@ LCD_Write_Data(b);
 	 y1:  窗体中Y坐标中较大者 
 返 回 值:无
 ------------------------------------------------*/
+static void ILI9327_SetPos(unsigned int x0,unsigned int x1,unsigned int y0,unsigned int y1)
+{
+	WriteCom(0x00,0x2A);
+	WriteData(x0>>8,x0);
+	WriteData(x1>>8,x1);
+	WriteCom(0x00,0x2B);
+	WriteData(y0>>8,y0);
+	WriteData(y1>>8,y1);
+	WriteCom(0x00,0x2C);
+}
+
+static void ILI9326_SetPos(unsigned int x0,unsigned int x1,unsigned int y0,unsigned int y1)
+{
+	WriteCom(0x02,0x10);WriteData(x0>>8,x0);
+	WriteCom(0x02,0x11);WriteData(x1>>8,x1);
+	WriteCom(0x02,0x12);WriteData(y0>>8,y0);
+	WriteCom(0x02,0x13);WriteData(y1>>8,y1);
+
+	WriteCom(0x02,0x00);WriteData(0X00,0X00);
+	WriteCom(0x02,0x01);WriteData(0X00,0X00);
+	WriteCom(0x02,0x02);
+}
+
 static void LCD_SetPos(unsigned int x0,unsigned int x1,unsigned int y0,unsigned int y1)
 {
-
-WriteCom(0x02,0x10);WriteData(x0>>8,x0);
-WriteCom(0x02,0x11);WriteData(x1>>8,x1);
-WriteCom(0x02,0x12);WriteData(y0>>8,y0);
-WriteCom(0x02,0x13);WriteData(y1>>8,y1);
-
-WriteCom(0x02,0x00);WriteData(0X00,0X00);
-WriteCom(0x02,0x01);WriteData(0X00,0X00);
-WriteCom(0x02,0x02);
+	#ifdef TFT_DRIVER_ILI9327
+		ILI9327_SetPos( x0, x1, y0, y1 );
+	#else /* TFT_DRIVER_ILI9326 */
+		ILI9326_SetPos( x0, x1, y0, y1 );
+	#endif
 }
 
 /*------------------------------------------------
@@ -353,6 +372,189 @@ void delayms(unsigned int count)
              	液晶初始化代码
 ------------------------------------------------*/
 
+static void ILI9326_Initialize( void )
+{
+	TFT_RST_SET(0);
+	delayms(20);
+	TFT_RST_SET(1);
+	delayms(200);
+	// Synchronization after reset
+	WriteCom(0x06,0x06);WriteData(0X00,0X00);
+	delayms(100);
+	WriteCom(0x00,0x07);WriteData(0X00,0X01);
+	delayms(5);
+	WriteCom(0x01,0x10);WriteData(0X00,0X01);
+	delayms(5);
+	WriteCom(0x01,0x00);WriteData(0X17,0XB0);
+	WriteCom(0x01,0x01);WriteData(0X01,0X47);
+	WriteCom(0x01,0x02);WriteData(0X01,0X9D);
+	WriteCom(0x01,0x03);WriteData(0X36,0X00);
+	WriteCom(0x02,0x81);WriteData(0X00,0X10);
+	delayms(5);
+	WriteCom(0x01,0x02);WriteData(0X01,0XBD);
+	delayms(5);
+	WriteCom(0x00,0x00);WriteData(0X00,0X00);
+	WriteCom(0x00,0x01);WriteData(0X01,0X00);
+	WriteCom(0x00,0x02);WriteData(0X01,0X00);
+	WriteCom(0x00,0x03);WriteData(0X10,0XB0);
+	WriteCom(0x00,0x06);WriteData(0X00,0X00);
+	WriteCom(0x00,0x08);WriteData(0X02,0X02);
+
+	WriteCom(0x00,0x09);WriteData(0X00,0X01);
+	WriteCom(0x00,0x0B);WriteData(0X00,0X10);
+	WriteCom(0x00,0x0C);WriteData(0X00,0X00);
+	WriteCom(0x00,0x0F);WriteData(0X00,0X00);
+	WriteCom(0x00,0x07);WriteData(0X00,0X01);
+
+	WriteCom(0x00,0x10);WriteData(0X00,0X11);
+	WriteCom(0x00,0x11);WriteData(0X03,0X01);
+	WriteCom(0x00,0x12);WriteData(0X03,0X00);
+	WriteCom(0x00,0x20);WriteData(0X02,0X1E);
+	WriteCom(0x00,0x21);WriteData(0X02,0X02);
+
+	WriteCom(0x00,0x90);WriteData(0X08,0X00);
+	WriteCom(0x00,0x92);WriteData(0X00,0X00);
+	WriteCom(0x01,0x00);WriteData(0X12,0XB0);
+	delayms(10);
+	WriteCom(0x01,0x01);WriteData(0X01,0X47);
+	delayms(10);
+	WriteCom(0x01,0x02);WriteData(0X01,0XBE);
+	delayms(10);
+	WriteCom(0x01,0x03);WriteData(0X2B,0X00);
+	delayms(10);
+	WriteCom(0x01,0x07);WriteData(0X00,0X00);
+	delayms(10);
+	WriteCom(0x01,0x10);WriteData(0X00,0X01);
+	delayms(10);
+	WriteCom(0x02,0x10);WriteData(0X00,0X00);
+	WriteCom(0x02,0x11);WriteData(0X00,0XEF);
+	WriteCom(0x02,0x12);WriteData(0X00,0X00);
+	WriteCom(0x02,0x13);WriteData(0X01,0X8F);
+	WriteCom(0x02,0x00);WriteData(0X00,0X00);
+
+	WriteCom(0x02,0x01);WriteData(0X00,0X00);
+	WriteCom(0x02,0x80);WriteData(0X00,0X00);
+	WriteCom(0x02,0x81);WriteData(0X00,0X07);
+	WriteCom(0x02,0x82);WriteData(0X00,0X00);
+	delayms(10);
+	WriteCom(0x03,0x00);WriteData(0X01,0X01);
+	WriteCom(0x03,0x01);WriteData(0X09,0X29);
+	WriteCom(0x03,0x02);WriteData(0X0F,0X2C);
+	WriteCom(0x03,0x03);WriteData(0X2C,0X0F);
+	WriteCom(0x03,0x04);WriteData(0X29,0X09);
+	WriteCom(0x03,0x05);WriteData(0X01,0X01);
+	WriteCom(0x03,0x06);WriteData(0X19,0X04);
+	WriteCom(0x03,0x07);WriteData(0X04,0X19);
+	WriteCom(0x03,0x08);WriteData(0X06,0X05);
+
+	WriteCom(0x03,0x09);WriteData(0X04,0X03);
+	WriteCom(0x03,0x0A);WriteData(0X0E,0X06);
+	WriteCom(0x03,0x0B);WriteData(0X0E,0X00);
+	WriteCom(0x03,0x0C);WriteData(0X00,0X0E);
+	WriteCom(0x03,0x0D);WriteData(0X06,0X0E);
+	WriteCom(0x03,0x0E);WriteData(0X03,0X04);
+	WriteCom(0x03,0x0F);WriteData(0X05,0X06);
+	WriteCom(0x04,0x00);WriteData(0X35,0X00);
+	WriteCom(0x04,0x01);WriteData(0X00,0X01);
+
+	WriteCom(0x04,0x04);WriteData(0X00,0X00);
+	WriteCom(0x05,0x00);WriteData(0X00,0X00);
+	WriteCom(0x05,0x01);WriteData(0X00,0X00);
+	WriteCom(0x05,0x02);WriteData(0X00,0X00);
+	WriteCom(0x05,0x03);WriteData(0X00,0X00);
+	WriteCom(0x05,0x04);WriteData(0X00,0X00);
+	WriteCom(0x05,0x05);WriteData(0X00,0X00);
+	WriteCom(0x06,0x00);WriteData(0X00,0X00);
+	WriteCom(0x06,0x06);WriteData(0X00,0X00);
+	WriteCom(0x06,0xF0);WriteData(0X00,0X00);
+	WriteCom(0x07,0xF0);WriteData(0X54,0X20);
+	WriteCom(0x07,0xF3);WriteData(0X28,0X0F);
+	WriteCom(0x07,0xF4);WriteData(0X00,0X22);
+	WriteCom(0x07,0xF5);WriteData(0X00,0X01);
+	WriteCom(0x07,0xF0);WriteData(0X00,0X00);
+	WriteCom(0x00,0x07);WriteData(0X01,0X73);
+	delayms(5);
+	WriteCom(0x00,0x07);WriteData(0X00,0X61);
+	delayms(5);
+	WriteCom(0x00,0x07);WriteData(0X01,0X73);
+	delayms(500);
+	WriteCom(0x02,0x02);		
+}
+
+static void ILI9327_Initialize( void )
+{
+	// VCI=2.80V
+	//************* Reset LCD Driver ****************//
+	TFT_RST_SET(1);
+	delayms(1); // delaymsms 1ms
+	TFT_RST_SET(0);
+	delayms(10); // delaymsms 10ms // This delaymsms time is necessary
+	TFT_RST_SET(1);
+	delayms(50); // delaymsms 50 ms
+	 // Synchronization after reset//////////
+	////////////////////////////////////////////
+	LCD_Write_Command(0x11); //Exit Sleep
+	delayms(100);
+	LCD_Write_Command(0xD1);
+	LCD_Write_Data (0x00);
+	LCD_Write_Data (0x71);
+	LCD_Write_Data (0x19);
+	LCD_Write_Command(0xD0);
+	LCD_Write_Data (0x07);
+	LCD_Write_Data (0x01);
+	LCD_Write_Data (0x08);
+	LCD_Write_Command(0x36);
+	LCD_Write_Data (0x48);
+	LCD_Write_Command(0x3A);
+	LCD_Write_Data (0x05);
+	LCD_Write_Command(0xC1);
+	LCD_Write_Data (0x10);
+	LCD_Write_Data (0x10);
+	LCD_Write_Data (0x02);
+	LCD_Write_Data (0x02);
+	LCD_Write_Command(0xC0); //Set Default Gamma
+	LCD_Write_Data (0x00);
+	LCD_Write_Data (0x35);
+	LCD_Write_Data (0x00);
+	LCD_Write_Data (0x00);
+	LCD_Write_Data (0x01);
+	LCD_Write_Data (0x02);
+	LCD_Write_Command(0xC5); //Set frame rate
+	LCD_Write_Data (0x04);
+	LCD_Write_Command(0xD2); //power setting
+	LCD_Write_Data (0x01);
+	LCD_Write_Data (0x44);
+	LCD_Write_Command(0xC8); //Set Gamma
+	LCD_Write_Data (0x04);
+	LCD_Write_Data (0x67);
+	LCD_Write_Data (0x35);
+	LCD_Write_Data (0x04);
+	LCD_Write_Data (0x08);
+	LCD_Write_Data (0x06);
+	LCD_Write_Data (0x24);
+	LCD_Write_Data (0x01);
+	LCD_Write_Data (0x37);
+	LCD_Write_Data (0x40);
+	LCD_Write_Data (0x03);
+	LCD_Write_Data (0x10);
+	LCD_Write_Data (0x08);
+	LCD_Write_Data (0x80);
+	LCD_Write_Data (0x00);
+	LCD_Write_Command(0x2A); 
+	LCD_Write_Data (0x00);
+	LCD_Write_Data (0x00);
+	LCD_Write_Data (X_MAX>>8);
+	LCD_Write_Data (X_MAX);
+	LCD_Write_Command(0x2B); 
+	LCD_Write_Data (0x00);
+	LCD_Write_Data (0x00);
+	LCD_Write_Data (Y_MAX>>8);
+	LCD_Write_Data (Y_MAX);
+	LCD_Write_Command(0x29); //display on      
+	LCD_Write_Command(0x2C); //display on
+	delayms(100);
+}
+
 void TFT_Initialize(void)
 { 
   RCC->APB2ENR|=0X0000001C;//先使能外设IO PORTA,B,C时钟
@@ -371,112 +573,13 @@ void TFT_Initialize(void)
 	GPIOC->CRL&=0XFF00FFFF;//PC4,5 推挽输出
 	GPIOC->CRL|=0X00330000;
 	GPIOC->ODR|=0X0030;//4,5 输出高	 */
-	TFT_RST_SET(0);
-	delayms(20);
-	TFT_RST_SET(1);
-	delayms(200);
- // Synchronization after reset
-WriteCom(0x06,0x06);WriteData(0X00,0X00);
-delayms(100);
-WriteCom(0x00,0x07);WriteData(0X00,0X01);
-delayms(5);
-WriteCom(0x01,0x10);WriteData(0X00,0X01);
-delayms(5);
-WriteCom(0x01,0x00);WriteData(0X17,0XB0);
-WriteCom(0x01,0x01);WriteData(0X01,0X47);
-WriteCom(0x01,0x02);WriteData(0X01,0X9D);
-WriteCom(0x01,0x03);WriteData(0X36,0X00);
-WriteCom(0x02,0x81);WriteData(0X00,0X10);
-delayms(5);
-WriteCom(0x01,0x02);WriteData(0X01,0XBD);
-delayms(5);
-WriteCom(0x00,0x00);WriteData(0X00,0X00);
-WriteCom(0x00,0x01);WriteData(0X01,0X00);
-WriteCom(0x00,0x02);WriteData(0X01,0X00);
-WriteCom(0x00,0x03);WriteData(0X10,0XB0);
-WriteCom(0x00,0x06);WriteData(0X00,0X00);
-WriteCom(0x00,0x08);WriteData(0X02,0X02);
 
-WriteCom(0x00,0x09);WriteData(0X00,0X01);
-WriteCom(0x00,0x0B);WriteData(0X00,0X10);
-WriteCom(0x00,0x0C);WriteData(0X00,0X00);
-WriteCom(0x00,0x0F);WriteData(0X00,0X00);
-WriteCom(0x00,0x07);WriteData(0X00,0X01);
+	#ifdef TFT_DRIVER_ILI9327
+		ILI9327_Initialize();
+	#else /* TFT_DRIVER_ILI9326 */
+		ILI9326_Initialize();
+	#endif
 
-WriteCom(0x00,0x10);WriteData(0X00,0X11);
-WriteCom(0x00,0x11);WriteData(0X03,0X01);
-WriteCom(0x00,0x12);WriteData(0X03,0X00);
-WriteCom(0x00,0x20);WriteData(0X02,0X1E);
-WriteCom(0x00,0x21);WriteData(0X02,0X02);
-
-WriteCom(0x00,0x90);WriteData(0X08,0X00);
-WriteCom(0x00,0x92);WriteData(0X00,0X00);
-WriteCom(0x01,0x00);WriteData(0X12,0XB0);
-delayms(10);
-WriteCom(0x01,0x01);WriteData(0X01,0X47);
-delayms(10);
-WriteCom(0x01,0x02);WriteData(0X01,0XBE);
-delayms(10);
-WriteCom(0x01,0x03);WriteData(0X2B,0X00);
-delayms(10);
-WriteCom(0x01,0x07);WriteData(0X00,0X00);
-delayms(10);
-WriteCom(0x01,0x10);WriteData(0X00,0X01);
-delayms(10);
-WriteCom(0x02,0x10);WriteData(0X00,0X00);
-WriteCom(0x02,0x11);WriteData(0X00,0XEF);
-WriteCom(0x02,0x12);WriteData(0X00,0X00);
-WriteCom(0x02,0x13);WriteData(0X01,0X8F);
-WriteCom(0x02,0x00);WriteData(0X00,0X00);
-
-WriteCom(0x02,0x01);WriteData(0X00,0X00);
-WriteCom(0x02,0x80);WriteData(0X00,0X00);
-WriteCom(0x02,0x81);WriteData(0X00,0X07);
-WriteCom(0x02,0x82);WriteData(0X00,0X00);
-delayms(10);
-WriteCom(0x03,0x00);WriteData(0X01,0X01);
-WriteCom(0x03,0x01);WriteData(0X09,0X29);
-WriteCom(0x03,0x02);WriteData(0X0F,0X2C);
-WriteCom(0x03,0x03);WriteData(0X2C,0X0F);
-WriteCom(0x03,0x04);WriteData(0X29,0X09);
-WriteCom(0x03,0x05);WriteData(0X01,0X01);
-WriteCom(0x03,0x06);WriteData(0X19,0X04);
-WriteCom(0x03,0x07);WriteData(0X04,0X19);
-WriteCom(0x03,0x08);WriteData(0X06,0X05);
-
-WriteCom(0x03,0x09);WriteData(0X04,0X03);
-WriteCom(0x03,0x0A);WriteData(0X0E,0X06);
-WriteCom(0x03,0x0B);WriteData(0X0E,0X00);
-WriteCom(0x03,0x0C);WriteData(0X00,0X0E);
-WriteCom(0x03,0x0D);WriteData(0X06,0X0E);
-WriteCom(0x03,0x0E);WriteData(0X03,0X04);
-WriteCom(0x03,0x0F);WriteData(0X05,0X06);
-WriteCom(0x04,0x00);WriteData(0X35,0X00);
-WriteCom(0x04,0x01);WriteData(0X00,0X01);
-
-WriteCom(0x04,0x04);WriteData(0X00,0X00);
-WriteCom(0x05,0x00);WriteData(0X00,0X00);
-WriteCom(0x05,0x01);WriteData(0X00,0X00);
-WriteCom(0x05,0x02);WriteData(0X00,0X00);
-WriteCom(0x05,0x03);WriteData(0X00,0X00);
-WriteCom(0x05,0x04);WriteData(0X00,0X00);
-WriteCom(0x05,0x05);WriteData(0X00,0X00);
-WriteCom(0x06,0x00);WriteData(0X00,0X00);
-WriteCom(0x06,0x06);WriteData(0X00,0X00);
-WriteCom(0x06,0xF0);WriteData(0X00,0X00);
-WriteCom(0x07,0xF0);WriteData(0X54,0X20);
-WriteCom(0x07,0xF3);WriteData(0X28,0X0F);
-WriteCom(0x07,0xF4);WriteData(0X00,0X22);
-WriteCom(0x07,0xF5);WriteData(0X00,0X01);
-WriteCom(0x07,0xF0);WriteData(0X00,0X00);
-WriteCom(0x00,0x07);WriteData(0X01,0X73);
-delayms(5);
-WriteCom(0x00,0x07);WriteData(0X00,0X61);
-delayms(5);
-WriteCom(0x00,0x07);WriteData(0X01,0X73);
-delayms(500);
-WriteCom(0x02,0x02);		
+	return	;
 }
-
-
 

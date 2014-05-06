@@ -3,6 +3,10 @@
 #ifndef __TFT_H__
 #define __TFT_H__
 
+// 屏幕驱动类型
+#define	TFT_DRIVER_ILI9326			(1)
+//#define	TFT_DRIVER_ILI9327			(2)
+
 // 字体大小
 typedef enum tagTftFontSizeEnum
 {
