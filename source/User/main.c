@@ -27,8 +27,8 @@ int main( void )
 	{
 	
 		xTaskCreate( Business_Entry, "Business_Entry", 1000, (void*)xQueue, 1, NULL );
-		xTaskCreate( Key_Entry, "Key_Entry", 1000, (void*)xQueue , 2 ,NULL );
-		xTaskCreate( HumiTemp_Entry, "HumiTemp_Entry", 1000, (void*)xQueue, 3, NULL );
+//		xTaskCreate( Key_Entry, "Key_Entry", 1000, (void*)xQueue , 2 ,NULL );
+//		xTaskCreate( HumiTemp_Entry, "HumiTemp_Entry", 1000, (void*)xQueue, 3, NULL );
 		//xTaskCreate( Motor_Entry, "Motor_Entry", 1000, (void*)xQueue, 3, NULL );
 	}
 

@@ -49,12 +49,12 @@ static  int  m_uiCurTempConut = 0;
 
 void RefurbishRegularScreen(void)
 {
-		TFT_DrawString(20,40,"电机转动时间:",forecolor,backcolor ,TftFontSize_16x16);
-		TFT_DrawString(88,80,"室内温度",forecolor,backcolor,TftFontSize_16x16);
-		TFT_DrawString(28,160,"温度上限",forecolor,backcolor,TftFontSize_16x16);
-		TFT_DrawString(148,160,"温度下限",forecolor,backcolor,TftFontSize_16x16);
-		TFT_DrawString(28,230,"第几路",forecolor,backcolor,TftFontSize_16x16);
-		TFT_DrawString(148,230,"当前时间",forecolor,backcolor,TftFontSize_16x16);
+		TFT_DrawString(10,40,"电机转动时间:",forecolor,backcolor ,FontSize_24);
+		TFT_DrawString(68,80,"室内温度",forecolor,backcolor,FontSize_24);
+		TFT_DrawString(8,160,"温度上限",forecolor,backcolor,FontSize_24);
+		TFT_DrawString(128,160,"温度下限",forecolor,backcolor,FontSize_24);
+		TFT_DrawString(8,230,"第几路",forecolor,backcolor,FontSize_24);
+		TFT_DrawString(128,230,"当前时间",forecolor,backcolor,FontSize_24);
 }
 
 void RefurbishElectricTime(int iTime)
@@ -77,7 +77,7 @@ void RefurbishElectricTime(int iTime)
 				str[0]  =  iTime+48;
 		}
 		
-		TFT_DrawString(150,40,str,forecolor,backcolor,TftFontSize_16x16);
+		TFT_DrawString(150,40,str,forecolor,backcolor,FontSize_24);
 
 }
 
@@ -95,7 +95,7 @@ void RefurbishCurTemp(int iCurTemp)
 		}
 
 		
-		TFT_DrawString(100,120,str,forecolor,backcolor,TftFontSize_16x16);
+		TFT_DrawString(100,120,str,forecolor,backcolor,FontSize_24);
 
 }
 
@@ -117,11 +117,11 @@ void RefurbishMostHightTemp(int iHTemp)
 		str[2]  =  ' ';
 			if(m_CurAdjustItem == Em_Item_MostTemp)
 		{
-			TFT_DrawString(28,200,str,Redcolor,backcolor,TftFontSize_16x16);
+			TFT_DrawString(28,200,str,Redcolor,backcolor,FontSize_24);
 		}
 		else
 		{
-			TFT_DrawString(28,200,str,forecolor,backcolor,TftFontSize_16x16);
+			TFT_DrawString(28,200,str,forecolor,backcolor,FontSize_24);
 		}
 		
 
@@ -143,11 +143,11 @@ void RefurbishMostLowTemp(int iLTemp)
 		str[2]  =  ' ';
 		if(m_CurAdjustItem == Em_Item_LeastTemp)
 		{
-			TFT_DrawString(148,200,str,Redcolor,backcolor,TftFontSize_16x16);
+			TFT_DrawString(148,200,str,Redcolor,backcolor,FontSize_24);
 		}
 		else
 		{
-			TFT_DrawString(148,200,str,forecolor,backcolor,TftFontSize_16x16);
+			TFT_DrawString(148,200,str,forecolor,backcolor,FontSize_24);
 		}
 	
 
@@ -161,7 +161,7 @@ void RefurbishLine(int iline)
 		str[1]  =  ' ';
 		str[2]  =  ' ';
 		
-		TFT_DrawString(28,260,str,forecolor,backcolor,TftFontSize_16x16);
+		TFT_DrawString(28,260,str,forecolor,backcolor,FontSize_24);
 
 }
 void   dealBtnAdd ()

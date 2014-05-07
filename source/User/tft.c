@@ -141,63 +141,6 @@ void TFT_ClearScreen( unsigned int uiColor )
 }
 
 /*------------------------------------------------
-             写8x16字符函数
-------------------------------------------------*/
-#include "8X16.h"
-void LCD_PutChar8x16(unsigned short x, unsigned short y, char c, unsigned int fColor, unsigned int bColor)
-{
- unsigned int i,j;
- LCD_SetPos(x,x+8-1,y,y+16-1);
- for(i=0; i<16;i++) {
-		unsigned char m=Font8x16[c*16+i];
-		for(j=0;j<8;j++) {
-			if((m&0x80)==0x80) {
-				Write_Data_U16(fColor);
-				}
-			else {
-				Write_Data_U16(bColor);
-				}
-			m<<=1;
-			}
-		}
-}
-
-/*------------------------------------------------
-              写字符串函数
-------------------------------------------------*/
-void LCD_PutChar(unsigned short x, unsigned short y, char c, unsigned int fColor, unsigned int bColor) {
-
-		LCD_PutChar8x16( x, y, c, fColor, bColor );
-	}
-
-/*------------------------------------------------
-             写16x16汉字函数
-------------------------------------------------*/
-#include "GB1616.h"	//16*16汉字字模
-
-void PutGB1616(unsigned short x, unsigned short  y, unsigned char c[2], unsigned int fColor,unsigned int bColor){
-	unsigned int i,j,k;
-
-	LCD_SetPos(x,  x+16-1,y, y+16-1);
-
-	for (k=0;k<64;k++) { //64标示自建汉字库中的个数，循环查询内码
-	  if ((codeGB_16[k].Index[0]==c[0])&&(codeGB_16[k].Index[1]==c[1])){ 
-    	for(i=0;i<32;i++) {
-		  unsigned short m=codeGB_16[k].Msk[i];
-		  for(j=0;j<8;j++) {
-			if((m&0x80)==0x80) {
-				Write_Data_U16(fColor);
-				}
-			else {
-				Write_Data_U16(bColor);
-				}
-			m<<=1;
-			} 
-		  }
-		}  
-	  }	
-	}
-/*------------------------------------------------
                 写字符串函数
 ------------------------------------------------*/
 void TFT_DrawString(	unsigned int	uiOffsetX,
@@ -205,22 +148,54 @@ void TFT_DrawString(	unsigned int	uiOffsetX,
 						unsigned char*	pucString,
 						unsigned int	uiForeColor,
 						unsigned int	uiBackColor,
-						TftFontSizeEnum	enFontSize	)
+						FontSizeEnum	enFontSize	)
 {
-	 unsigned char l=0;
-	while(*pucString) {
-		if( *pucString < 0x80) 
-		    {
-			LCD_PutChar(uiOffsetX+l*8,uiOffsetY,*pucString,uiForeColor,uiBackColor);
-			pucString++;l++;
-			}
-		else
-		    {
-			PutGB1616(uiOffsetX+l*8,uiOffsetY,(unsigned char*)pucString,uiForeColor,uiBackColor);
-			pucString+=2;l+=2;
+	int				iLoop1 = 0;
+	int				iLoop2 = 0;
+	FontMaskInfo_t	stFontMaskInfo = { 0 };
+
+	if ( !pucString )
+	{
+		return	;
+	}
+
+	while ( *pucString )
+	{
+		if ( FontRslt_Success == Font_GetMask(enFontSize, pucString, &stFontMaskInfo) )
+		{
+
+			LCD_SetPos( uiOffsetX,  uiOffsetX + stFontMaskInfo.ucWidth - 1, uiOffsetY, uiOffsetY + stFontMaskInfo.ucHeight - 1 );
+
+			uiOffsetX += stFontMaskInfo.ucWidth;
+
+			for ( iLoop1 = 0; iLoop1 < stFontMaskInfo.ucSize; ++iLoop1 )
+			{		
+				for ( iLoop2 = 0; iLoop2 < 8; ++iLoop2 )
+				{
+					if ( 0x80 == ((stFontMaskInfo.pucMask[iLoop1] << iLoop2) & 0x80) )
+					{
+						Write_Data_U16( uiForeColor );
+					}
+					else
+					{
+						Write_Data_U16( uiBackColor );
+					}
+				}
 			}
 		}
+
+		if ( *pucString < 0x80 )
+		{
+			++pucString;
+		}
+		else
+		{
+			pucString += 2;
+		}
 	}
+
+	return	;
+}
 /*------------------------------------------------
               指定区域显示指定RGB颜色
 ------------------------------------------------*/
