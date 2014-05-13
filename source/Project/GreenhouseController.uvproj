@@ -448,6 +448,11 @@
               <FileType>1</FileType>
               <FilePath>..\User\Font.c</FilePath>
             </File>
+            <File>
+              <FileName>LightCounter.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\LightCounter.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
