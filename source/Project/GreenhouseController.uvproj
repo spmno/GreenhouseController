@@ -453,6 +453,11 @@
               <FileType>1</FileType>
               <FilePath>..\User\LightCounter.c</FilePath>
             </File>
+            <File>
+              <FileName>Usart1.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Usart1.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
