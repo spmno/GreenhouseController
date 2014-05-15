@@ -458,6 +458,11 @@
               <FileType>1</FileType>
               <FilePath>..\User\Usart1.c</FilePath>
             </File>
+            <File>
+              <FileName>RealTimeClock.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\RealTimeClock.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
