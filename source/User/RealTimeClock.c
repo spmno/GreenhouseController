@@ -1,6 +1,8 @@
 #include <stm32f10x.h>
 #include "RealTimeClock.h"
 
+static CLOCK_TASK Current_Clock_Task;
+
 void Rtc_Configure()
 {
 	//使能电源和后备寄存器的时钟
@@ -61,6 +63,10 @@ void RTC_IRQHandler(void)
 	if(RTC_GetITStatus(RTC_IT_SEC) != RESET) 
 	{
 		RTC_ClearITPendingBit(RTC_IT_SEC);
+		if (Current_Clock_Task != 0)
+		{
+			(*Current_Clock_Task)();
+		}
 	}
 }
 
@@ -73,5 +79,14 @@ int Real_Time_Clock_Init()
 
 void Register_Real_Time_Task(CLOCK_TASK task)
 {
+	Current_Clock_Task = task;
 	return ;
+}
+
+void Real_Time_Clock_Adjust(char Hour, char Minute, char Second)
+{
+	int Count = Hour*60*60 + Minute*60 + Second;
+	RTC_WaitForLastTask();  
+  RTC_SetCounter(Count);  
+	RTC_WaitForLastTask();
 }

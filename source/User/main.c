@@ -12,13 +12,14 @@
 #include	"key.h"
 #include	"Motor.h"
 #include	"HumiTemp.h"
+#include	"RealTimeClock.h"
 
 int main( void )
 {
 	xQueueHandle xQueue;
 	
 	Stm32_Clock_Init();//系统时钟设置
-	
+	/*
 	TFT_Initialize();
 	Motor_GPIO_Init();
 	
@@ -31,7 +32,8 @@ int main( void )
 	}
 
 	vTaskStartScheduler();
-	
+	*/
+	Real_Time_Clock_Init();
 	while ( 1 )
 	{
 
