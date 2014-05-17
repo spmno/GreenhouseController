@@ -468,6 +468,11 @@
               <FileType>1</FileType>
               <FilePath>..\User\InterFlash.c</FilePath>
             </File>
+            <File>
+              <FileName>Buzzer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Buzzer.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
